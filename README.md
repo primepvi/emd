@@ -1,20 +1,7 @@
 # emd
 
 A Markdown extension language for writing documents with custom components
-and generating static HTML.
-
-## example
-
-```emd
-# Hello, EMD
-
-*This* is a regular **Markdown** document.
-
-@media {
-    :src "assets/example.png",
-    :alt "An example image"
-}
-```
+and generating static HTML. 
 
 ## how to use
 Build the project and generate .html from .emd document.
