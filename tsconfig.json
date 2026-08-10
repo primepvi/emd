@@ -10,6 +10,7 @@
     "strict": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
+    "types": ["node"],
 
     "sourceMap": true,
     "declaration": true,

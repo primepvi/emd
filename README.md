@@ -11,8 +11,8 @@ and generating static HTML.
 *This* is a regular **Markdown** document.
 
 @media {
-    src: "assets/example.png",
-    alt: "An example image"
+    :src "assets/example.png",
+    :alt "An example image"
 }
 ```
 

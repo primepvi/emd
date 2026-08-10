@@ -1,0 +1,18 @@
+# Hello World
+
+This is a simple **EMD** document.
+
+Markdown continues to work normally.
+
+@media {
+    :src "image.png",
+    :alt "An example image"
+}
+
+## Features
+
+- Markdown
+- Custom components
+- Static HTML generation
+
+That's it.
