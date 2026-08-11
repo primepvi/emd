@@ -1,12 +1,15 @@
 import { readFileSync } from "node:fs";
 import { Lexer } from "./structs/Lexer.js";
-import { TokenKind } from "./types/token.js";
+import { Parser } from "./structs/Parser.js";
+import { NodeKind } from "./types/document.js";
 
 const source = readFileSync("examples/hello.emd", "utf8");
 
 const lexer = new Lexer(source);
 const tokens = lexer.lex();
 
-for (const token of tokens) {
-  console.log(TokenKind[token.kind], token);
+const parser = new Parser(tokens);
+const document = parser.parse();
+for (const node of document.nodes) {
+	console.log(NodeKind[node.kind], node);
 }

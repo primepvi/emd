@@ -5,6 +5,10 @@ export enum TokenKind {
 	OpenBrace = 0,      // {
 	CloseBrace,         // }
 	Comma,              // ,
+	Star,               // *
+	Escape,             // \
+	HashTag,            // #
+	Minus,              // -
 
 	// Essentials
 	Atom,

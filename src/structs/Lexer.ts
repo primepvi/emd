@@ -4,7 +4,11 @@ const LEXER_REGEXES: [TokenKind, RegExp][] = [
 	[TokenKind.OpenBrace, /^\{/],
 	[TokenKind.CloseBrace, /^\}/],
 	[TokenKind.Comma, /^,/],
-
+	[TokenKind.Star, /^\*/],
+	[TokenKind.Escape, /^\\/],
+	[TokenKind.HashTag, /^#/],
+	[TokenKind.Minus, /^-/],
+	[TokenKind.NewLine, /^(\\n|\\r)/],
 	[TokenKind.Boolean, /^(true|false)/],
 	[TokenKind.Atom, /^:[a-zA-Z_][a-zA-Z0-9_-]*/],
 	[TokenKind.Identifier, /^@[a-zA-Z_][a-zA-Z0-9_-]*/],
@@ -13,27 +17,35 @@ const LEXER_REGEXES: [TokenKind, RegExp][] = [
 ];
 
 export class Lexer {
-	public cursor = 0;
-	public constructor(public source: string) { }
+	private cursor = 0;
+	private line = 0;
 
-	public lex(): Token[] {
-		const tokens: Token[] = [];
-		while (this.cursor < this.source.length) {
-			tokens.push(this.readToken());
-		}
+	private sourceLines: string[];
+	private tokens: Token[] = [];
 
-		tokens.push({ kind: TokenKind.EOF, lexeme: "\0" });
-		return tokens;
+	public constructor(public source: string) {
+		this.sourceLines = source.split(/\r?\n/);
 	}
 
-	private readToken(): Token {
-		const currentText = this.source.slice(this.cursor);
-		if (currentText.startsWith("\n")) {
+	public lex(): Token[] {
+		while (this.cursor < this.source.length) {
+			this.readToken();
+		}
+
+		this.tokens.push({ kind: TokenKind.EOF, lexeme: "\0" });
+		return this.tokens;
+	}
+
+	private readToken(): void {
+		let currentText = this.source.slice(this.cursor);
+		while (currentText.startsWith("\n") || currentText.startsWith("\r")) {
 			this.cursor++;
-			return {
-				kind: TokenKind.NewLine,
-				lexeme: "\n"
-			} satisfies Token;
+			this.line++;
+			currentText = currentText.slice(1);
+
+			if (this.sourceLines[this.line]!.length === 0) {
+				this.tokens.push({ kind: TokenKind.NewLine, lexeme: "\n" });
+			}
 		}
 
 		for (const [kind, regex] of LEXER_REGEXES) {
@@ -44,28 +56,24 @@ export class Lexer {
 			const whitespaces = currentText.length - currentText.trim().length;
 			this.cursor += whitespaces + lexeme.length;
 
-			return {
+			this.tokens.push({
 				kind,
 				lexeme
-			} satisfies Token;
+			});
+
+			return;
 		}
 
-		return this.readTextToken();
+		this.tokens.push(this.readTextToken());
 	}
 
 	private readTextToken(): Token {
 		const start = this.cursor;
+		const exclude = ['@', '*', '\n', '\r'];
 
 		while (this.cursor < this.source.length) {
-			const char = this.source[this.cursor];
-
-			if (
-				char === '@' ||
-				char === '\n' ||
-				char === '\r'
-			) {
-				break;
-			}
+			const char = this.source[this.cursor]!;
+			if (exclude.includes(char) && this.source[this.cursor - 1] != "\\") break;
 
 			this.cursor++;
 		}

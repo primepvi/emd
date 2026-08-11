@@ -4,9 +4,9 @@ This is a simple **EMD** document.
 
 Markdown continues to work normally.
 
-@media {
-    :src "image.png",
-    :alt "An example image"
+@image {
+    :src "assets/logo.png",
+    :alt "EMD Logo"
 }
 
 ## Features
