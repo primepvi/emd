@@ -1,7 +1,7 @@
 import type { Token } from "./token.js";
 
 export interface Document {
-	nodes: Node[];
+	nodes: LayoutNode[];
 };
 
 export enum NodeKind {
