@@ -55,7 +55,7 @@ export class Lexer {
 				) {
 					this.tokens.push({
 						kind: TokenKind.Dedent,
-						lexeme: ""
+						lexeme: this.identations.length.toString()
 					});
 
 					this.identations.pop();

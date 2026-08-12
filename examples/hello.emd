@@ -10,10 +10,10 @@ Markdown continues to work normally.
 
 ## Features
 | See the features below:
- - Markdown
- - Custom components
- - Static HTML generation
-      - With custom css theme
+- Markdown
+- Custom components
+- Static HTML generation
+  - With custom css theme
 
 > Click here
   That's it.

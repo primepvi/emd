@@ -76,7 +76,7 @@ export class Compiler {
 
 		this.depth = parentDepth;
 		const code = [
-			this.indent(`<div class="emd-block">`),
+			this.indent(`<div class="emd-block emd-block--${node.level}">`),
 			bodyChildren.join("\n"),
 			this.indent(`</div>`)
 		];
@@ -85,11 +85,25 @@ export class Compiler {
 	}
 
 	private compileCitationNode(node: CitationNode): string {
-		return `TODO: implement this.`;
+		const body = this.compileContentNode(node.content);
+		return this.indent(`<blockquote class="emd-quote">${body}</blockquote>`);
 	}
 
 	private compileCollapsibleNode(node: CollapsibleNode): string {
-		return `TODO: implement this.`;
+		const parentDepth = this.depth++;
+
+		const summary = this.indent(`<summary>${this.compileContentNode(node.title)}</summary>`);
+		const block = this.compileBlockNode(node.block);
+
+		this.depth = parentDepth;
+		const code = [
+			this.indent(`<details class="emd-collapsible">`),
+			summary,
+			block,
+			this.indent(`</details>`)
+		];
+
+		return code.join("\n");
 	}
 
 	private compileHeadingNode(node: HeadingNode): string {

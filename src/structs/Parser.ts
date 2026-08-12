@@ -61,8 +61,8 @@ export class Parser {
 			childrens.push(this.parseLayoutNode());
 		}
 
-		this.expect(TokenKind.Dedent);
-		return { kind: NodeKind.Block, childrens };
+		const token = this.expect(TokenKind.Dedent);
+		return { kind: NodeKind.Block, childrens, level: parseInt(token.lexeme) };
 	}
 
 	private parseHeadingNode(): HeadingNode {

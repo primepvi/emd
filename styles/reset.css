@@ -23,6 +23,9 @@ p,
 ul,
 ol,
 pre,
+blockquote,
+summary,
+details,
 img {
     margin: 0;
     padding: 0;
@@ -43,6 +46,9 @@ svg {
 button,
 input,
 textarea,
-select {
+select,
+blockquote,
+summary,
+details {
     font: inherit;
 }

@@ -11,7 +11,7 @@ const source = readFileSync("examples/hello.emd", "utf8");
 
 const lexer = new Lexer(source);
 const tokens = lexer.lex();
-tokens.forEach(t => console.log(TokenKind[t.kind], t));
+//tokens.forEach(t => console.log(TokenKind[t.kind], t));
 
 const parser = new Parser(tokens);
 const document = parser.parse();

@@ -92,6 +92,7 @@ export interface CitationNode {
 
 export interface BlockNode {
 	kind: NodeKind.Block;
+	level: number;
 	childrens: LayoutNode[];
 }
 
