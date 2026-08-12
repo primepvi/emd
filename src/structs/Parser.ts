@@ -79,12 +79,15 @@ export class Parser {
 
 	private parseUnorderedListNode(): UnorderedListNode {
 		const items: UnorderedListItemNode[] = [];
+
 		while (this.peek().kind == TokenKind.Minus) {
 			this.expect(TokenKind.Minus);
 			items.push({
 				kind: NodeKind.UnorderedListItem,
 				item: this.parseContentNode()
 			});
+		  
+			this.ignoreNewLine();
 		}
 
 		return { kind: NodeKind.UnorderedList, items };
@@ -97,6 +100,8 @@ export class Parser {
 
 		this.expect(TokenKind.OpenBrace);
 		while (!this.isEof() && this.peek().kind != TokenKind.CloseBrace) {
+			this.ignoreNewLine();
+
 			let attributeName: string | null = null;
 			if (this.peek(1).kind != TokenKind.Comma && this.peek(1).kind != TokenKind.CloseBrace) {
 				const atom = this.expect(TokenKind.Atom);
@@ -106,6 +111,7 @@ export class Parser {
 			const value = this.parseLiteralNode();
 			attributes.push({ kind: NodeKind.ComponentAttribute, name: attributeName, value });
 
+			this.ignoreNewLine();
 			if (this.peek().kind == TokenKind.Comma) {
 				this.expect(TokenKind.Comma);
 			}
@@ -167,6 +173,8 @@ export class Parser {
 	}
 
 	private parseLiteralNode(): LiteralNode {
+		this.ignoreNewLine();
+
 		const token = this.eat();
 		switch (token.kind) {
 			case TokenKind.String: {
@@ -210,5 +218,11 @@ export class Parser {
 	private isEof() {
 		return this.tokens[this.cursor]!.kind == TokenKind.EOF ||
 			this.cursor >= this.tokens.length;
+	}
+
+	private ignoreNewLine() {
+		while (this.peek().kind == TokenKind.NewLine) {
+			this.expect(TokenKind.NewLine);
+		}
 	}
 }

@@ -8,7 +8,6 @@ const LEXER_REGEXES: [TokenKind, RegExp][] = [
 	[TokenKind.Escape, /^\\/],
 	[TokenKind.HashTag, /^#/],
 	[TokenKind.Minus, /^-/],
-	[TokenKind.NewLine, /^(\\n|\\r)/],
 	[TokenKind.Boolean, /^(true|false)/],
 	[TokenKind.Atom, /^:[a-zA-Z_][a-zA-Z0-9_-]*/],
 	[TokenKind.Identifier, /^@[a-zA-Z_][a-zA-Z0-9_-]*/],
@@ -18,15 +17,9 @@ const LEXER_REGEXES: [TokenKind, RegExp][] = [
 
 export class Lexer {
 	private cursor = 0;
-	private line = 0;
-
-	private sourceLines: string[];
 	private tokens: Token[] = [];
 
-	public constructor(public source: string) {
-		this.sourceLines = source.split(/\r?\n/);
-	}
-
+	public constructor(public source: string) { }
 	public lex(): Token[] {
 		while (this.cursor < this.source.length) {
 			this.readToken();
@@ -40,12 +33,8 @@ export class Lexer {
 		let currentText = this.source.slice(this.cursor);
 		while (currentText.startsWith("\n") || currentText.startsWith("\r")) {
 			this.cursor++;
-			this.line++;
 			currentText = currentText.slice(1);
-
-			if (this.sourceLines[this.line]!.length === 0) {
-				this.tokens.push({ kind: TokenKind.NewLine, lexeme: "\n" });
-			}
+			this.tokens.push({ kind: TokenKind.NewLine, lexeme: "\n" });
 		}
 
 		for (const [kind, regex] of LEXER_REGEXES) {
@@ -74,7 +63,6 @@ export class Lexer {
 		while (this.cursor < this.source.length) {
 			const char = this.source[this.cursor]!;
 			if (exclude.includes(char) && this.source[this.cursor - 1] != "\\") break;
-
 			this.cursor++;
 		}
 
