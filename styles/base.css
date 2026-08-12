@@ -1,0 +1,96 @@
+body {
+    background: var(--emd-color-background);
+    color: var(--emd-color-text);
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    font-size: var(--emd-font-size-md);
+    font-weight: var(--emd-font-weight-normal);
+}
+
+/* Document */
+.emd-document {
+    width: 100%;
+    max-width: var(--emd-document-width);
+    margin-inline: auto;
+    padding-inline: var(--emd-document-padding);
+    margin-top: var(--emd-space-2);
+    margin-bottom: var(--emd-space-2);
+}
+
+/* Nodes */
+/* Heading */
+.emd-heading {
+    color: var(--emd-color-heading);
+    font-weight: var(--emd-font-weight-bold);
+    line-height: 1.2;
+    margin-top: var(--emd-space-8);
+    margin-bottom: var(--emd-space-4);
+}
+
+.emd-heading:first-child {
+    margin-top: 0;
+}
+
+.emd-heading--1 {
+    font-size: var(--emd-font-size-4xl);
+}
+
+.emd-heading--2 {
+    font-size: var(--emd-font-size-3xl);
+}
+
+.emd-heading--3 {
+    font-size: var(--emd-font-size-2xl);
+}
+
+.emd-heading--4 {
+    font-size: var(--emd-font-size-xl);
+}
+
+.emd-heading--5 {
+    font-size: var(--emd-font-size-lg);
+}
+
+.emd-heading--6 {
+    font-size: var(--emd-font-size-md);
+}
+
+/* Paragraph */
+.emd-paragraph {
+    margin-bottom: var(--emd-space-2);
+    color: var(--emd-color-text);
+    font-size: var(--emd-font-size-md);
+    line-height: 1.75;
+}
+
+.emd-paragraph:last-child {
+    margin-bottom: 0;
+}
+
+/* List */
+.emd-list {
+    margin-bottom: var(--emd-space-4);
+    padding-left: var(--emd-space-6);
+}
+
+.emd-list--unordered {
+    list-style-type: disc;
+}
+
+.emd-list-item {
+    margin-bottom: var(--emd-space-1);
+    line-height: 1.6;
+}
+
+.emd-list-item:last-child {
+    margin-bottom: 0;
+}
+
+/* EmptyLine */
+.emd-empty-line {
+    margin-bottom: var(--emd-space-1);
+}

@@ -7,6 +7,6 @@ export class ImageComponentProcessor extends ComponentProcessor {
 		const source = this.getNamedAttrib(context, "src") || this.getAttrib(context, 0);
 		const alt = this.getNamedAttrib(context, "alt") || "";
 
-		return `<img src="${source}" alt="${alt}"/>`
+		return `<img class="emd-image" src="${source}" alt="${alt}"/>`
 	}
 }

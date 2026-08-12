@@ -35,7 +35,7 @@ export class Compiler {
 		].join("\n");
 
 		const body = [
-			this.indent("<body>"),
+			this.indent(`<body class="emd-document">`),
 			bodyChildren.join("\n"),
 			this.indent("</body>")
 		].join("\n");
@@ -53,7 +53,7 @@ export class Compiler {
 		switch (node.kind) {
 			case NodeKind.Heading: return this.compileHeadingNode(node as HeadingNode);
 			case NodeKind.Paragraph: return this.compileParagraphNode(node as ParagraphNode);
-			case NodeKind.EmptyLine: return this.indent("<br>");
+			case NodeKind.EmptyLine: return this.indent(`<br class="emd-empty-line">`);
 			case NodeKind.UnorderedList: return this.compileUnorderedListNode(node as UnorderedListNode);
 			case NodeKind.Component: return this.compileComponentNode(node as ComponentNode);
 		}
@@ -61,7 +61,7 @@ export class Compiler {
 
 	private compileHeadingNode(node: HeadingNode): string {
 		const bodyCode = this.compileContentNode(node.content).trim();
-		return this.indent(`<h${node.level}>${bodyCode}</h${node.level}>`);
+	  return this.indent(`<h${node.level} class="emd-heading emd-heading--${node.level}">${bodyCode}</h${node.level}>`);
 	}
 
 	private compileParagraphNode(node: ParagraphNode): string {
@@ -71,7 +71,7 @@ export class Compiler {
 			bodyChildren.push(this.compileContentNode(child));
 		}
 
-		return this.indent(`<p>${bodyChildren.join("")}</p>`);
+		return this.indent(`<p class="emd-paragraph">${bodyChildren.join("")}</p>`);
 	}
 
 	private compileUnorderedListNode(
@@ -82,13 +82,13 @@ export class Compiler {
 
 		for (const child of node.items) {
 			const content = this.compileContentNode(child.item).trim();
-			bodyChildren.push(this.indent(`<li>${content}</li>`));
+			bodyChildren.push(this.indent(`<li class="emd-list-item">${content}</li>`));
 		}
 
 		this.depth = parentDepth;
 
 		const code = [
-			this.indent("<ul>"),
+			this.indent(`<ul class="emd-list emd-list--unordered">`),
 			bodyChildren.join("\n"),
 			this.indent("</ul>")
 		].join("\n");

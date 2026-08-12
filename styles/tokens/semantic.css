@@ -1,0 +1,16 @@
+:root {
+    /* Document */    
+    --emd-color-background: var(--emd-white);
+    --emd-color-foreground: var(--emd-gray-900);
+
+    /* Text */
+    --emd-color-text: var(--emd-gray-900);
+    --emd-color-text-muted: var(--emd-gray-600);
+
+    /* Heading */
+    --emd-color-heading: var(--emd-gray-900);
+
+    /* Layout */
+    --emd-document-width: var(--emd-content-width);
+    --emd-document-padding: var(--emd-content-padding);
+}

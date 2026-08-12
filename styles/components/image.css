@@ -1,0 +1,7 @@
+.emd-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-block: var(--emd-space-2);
+    border-radius: var(--emd-radius-md);
+}

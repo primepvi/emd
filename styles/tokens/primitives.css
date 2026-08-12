@@ -1,0 +1,61 @@
+:root {
+    /* Colors */
+    --emd-white: #ffffff;
+    --emd-black: #000000;
+
+    --emd-gray-50: #f9fafb;
+    --emd-gray-100: #f3f4f6;
+    --emd-gray-200: #e5e7eb;
+    --emd-gray-300: #d1d5db;
+    --emd-gray-400: #9ca3af;
+    --emd-gray-500: #6b7280;
+    --emd-gray-600: #4b5563;
+    --emd-gray-700: #374151;
+    --emd-gray-800: #1f2937;
+    --emd-gray-900: #111827;
+
+    --emd-blue-500: #3b82f6;
+    --emd-blue-600: #2563eb;
+
+    /* Spacing */
+    --emd-space-1: 0.25rem;
+    --emd-space-2: 0.5rem;
+    --emd-space-3: 0.75rem;
+    --emd-space-4: 1rem;
+    --emd-space-5: 1.25rem;
+    --emd-space-6: 1.5rem;
+    --emd-space-8: 2rem;
+    --emd-space-10: 2.5rem;
+    --emd-space-12: 3rem;
+    --emd-space-16: 4rem;
+
+    /* Typography */
+    --emd-font-size-xs: 0.75rem;
+    --emd-font-size-sm: 0.875rem;
+    --emd-font-size-md: 1rem;
+    --emd-font-size-lg: 1.125rem;
+    --emd-font-size-xl: 1.25rem;
+    --emd-font-size-2xl: 1.5rem;
+    --emd-font-size-3xl: 1.875rem;
+    --emd-font-size-4xl: 2.25rem;
+
+    --emd-font-weight-normal: 400;
+    --emd-font-weight-medium: 500;
+    --emd-font-weight-semibold: 600;
+    --emd-font-weight-bold: 700;
+
+    /* Radius */
+    --emd-radius-sm: 0.25rem;
+    --emd-radius-md: 0.5rem;
+    --emd-radius-lg: 0.75rem;
+
+    /* Layout */
+    --emd-content-width: 720px;
+    --emd-content-padding: var(--emd-space-4);
+
+    /* Shadows */
+    --emd-shadow-sm:
+        0 1px 2px rgb(0 0 0 / 0.05);
+    --emd-shadow-md:
+        0 4px 6px rgb(0 0 0 / 0.1);
+}
