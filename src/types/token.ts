@@ -1,14 +1,18 @@
 export enum TokenKind {
 	EOF = -1,
+	Ident = 0,
+	Dedent,
 
 	// Punctuators
-	OpenBrace = 0,      // {
+	OpenBrace,          // {
 	CloseBrace,         // }
 	Comma,              // ,
 	Star,               // *
 	Escape,             // \
 	HashTag,            // #
 	Minus,              // -
+	Major,              // >
+	Pipe,               // |
 
 	// Essentials
 	Atom,

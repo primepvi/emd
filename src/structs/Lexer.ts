@@ -8,6 +8,8 @@ const LEXER_REGEXES: [TokenKind, RegExp][] = [
 	[TokenKind.Escape, /^\\/],
 	[TokenKind.HashTag, /^#/],
 	[TokenKind.Minus, /^-/],
+	[TokenKind.Major, /^>/],
+	[TokenKind.Pipe, /^\|/],
 	[TokenKind.Boolean, /^(true|false)/],
 	[TokenKind.Atom, /^:[a-zA-Z_][a-zA-Z0-9_-]*/],
 	[TokenKind.Identifier, /^@[a-zA-Z_][a-zA-Z0-9_-]*/],
@@ -18,6 +20,7 @@ const LEXER_REGEXES: [TokenKind, RegExp][] = [
 export class Lexer {
 	private cursor = 0;
 	private tokens: Token[] = [];
+	private identations: number[] = [];
 
 	public constructor(public source: string) { }
 	public lex(): Token[] {
@@ -25,16 +28,42 @@ export class Lexer {
 			this.readToken();
 		}
 
+		const dedents = this.identations.map(i => ({ kind: TokenKind.Dedent, lexeme: i.toString() }));
+		this.tokens.push(...dedents);
 		this.tokens.push({ kind: TokenKind.EOF, lexeme: "\0" });
+
 		return this.tokens;
 	}
 
 	private readToken(): void {
 		let currentText = this.source.slice(this.cursor);
-		while (currentText.startsWith("\n") || currentText.startsWith("\r")) {
-			this.cursor++;
+		while (currentText.startsWith("\n\r") || currentText.startsWith("\n")) {
 			currentText = currentText.slice(1);
+			this.cursor++;
 			this.tokens.push({ kind: TokenKind.NewLine, lexeme: "\n" });
+
+			const line = currentText.split("\n")[0]!;
+			if (line.length <= 0) continue;
+
+			const whitespaces = line.match(/^ +/)?.[0].length ?? 0;
+			const identation = this.identations[this.identations.length - 1] ?? 0;
+
+			if (identation > whitespaces) {
+				while (
+					this.identations.length > 0 &&
+					this.identations[this.identations.length - 1]! > whitespaces
+				) {
+					this.tokens.push({
+						kind: TokenKind.Dedent,
+						lexeme: ""
+					});
+
+					this.identations.pop();
+				}
+			} else if (identation < whitespaces) {
+				this.tokens.push({ kind: TokenKind.Ident, lexeme: "" });
+				this.identations.push(whitespaces);
+			}
 		}
 
 		for (const [kind, regex] of LEXER_REGEXES) {

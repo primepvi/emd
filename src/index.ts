@@ -5,11 +5,13 @@ import { NodeKind } from "./types/document.js";
 import { Compiler } from "./structs/Compiler.js";
 import type { ComponentProcessorRegistry } from "./types/component.js";
 import { ImageComponentProcessor } from "./components/image.js";
+import { TokenKind } from "./types/token.js";
 
 const source = readFileSync("examples/hello.emd", "utf8");
 
 const lexer = new Lexer(source);
 const tokens = lexer.lex();
+tokens.forEach(t => console.log(TokenKind[t.kind], t));
 
 const parser = new Parser(tokens);
 const document = parser.parse();

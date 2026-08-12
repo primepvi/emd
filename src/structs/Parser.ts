@@ -15,6 +15,9 @@ import {
 	type ComponentAttributeNode,
 	type EmptyLineNode,
 	type LiteralNode,
+	type CitationNode,
+	type BlockNode,
+	type CollapsibleNode,
 } from "../types/document.js";
 
 export class Parser {
@@ -37,14 +40,29 @@ export class Parser {
 	private parseLayoutNode(): LayoutNode {
 		const token = this.peek();
 		switch (token.kind) {
+			case TokenKind.Ident: return this.parseBlockNode();
 			case TokenKind.HashTag: return this.parseHeadingNode();
 			case TokenKind.Star:
 			case TokenKind.Text: return this.parseParagraphNode();
 			case TokenKind.Minus: return this.parseUnorderedListNode();
 			case TokenKind.Identifier: return this.parseComponentNode();
 			case TokenKind.NewLine: return this.parseEmptyLineNode();
+			case TokenKind.Pipe: return this.parseCitationNode();
+			case TokenKind.Major: return this.parseCollapsibleNode();
 			default: throw new Error(`Invalid token has received during layout node parsing: ${TokenKind[token.kind]} -> ${this.cursor}`);
 		}
+	}
+
+	private parseBlockNode(): BlockNode {
+		this.expect(TokenKind.Ident);
+
+		const childrens: LayoutNode[] = [];
+		while (!this.isEof() && this.peek().kind != TokenKind.Dedent) {
+			childrens.push(this.parseLayoutNode());
+		}
+
+		this.expect(TokenKind.Dedent);
+		return { kind: NodeKind.Block, childrens };
 	}
 
 	private parseHeadingNode(): HeadingNode {
@@ -86,7 +104,7 @@ export class Parser {
 				kind: NodeKind.UnorderedListItem,
 				item: this.parseContentNode()
 			});
-		  
+
 			this.ignoreNewLine();
 		}
 
@@ -100,7 +118,7 @@ export class Parser {
 
 		this.expect(TokenKind.OpenBrace);
 		while (!this.isEof() && this.peek().kind != TokenKind.CloseBrace) {
-			this.ignoreNewLine();
+			this.ignoreWhitespaces();
 
 			let attributeName: string | null = null;
 			if (this.peek(1).kind != TokenKind.Comma && this.peek(1).kind != TokenKind.CloseBrace) {
@@ -111,7 +129,7 @@ export class Parser {
 			const value = this.parseLiteralNode();
 			attributes.push({ kind: NodeKind.ComponentAttribute, name: attributeName, value });
 
-			this.ignoreNewLine();
+			this.ignoreWhitespaces();
 			if (this.peek().kind == TokenKind.Comma) {
 				this.expect(TokenKind.Comma);
 			}
@@ -130,6 +148,21 @@ export class Parser {
 		}
 
 		return { kind: NodeKind.EmptyLine, count };
+	}
+
+	private parseCitationNode(): CitationNode {
+		this.expect(TokenKind.Pipe);
+		return { kind: NodeKind.Citation, content: this.parseContentNode() };
+	}
+
+	private parseCollapsibleNode(): CollapsibleNode {
+		this.expect(TokenKind.Major);
+		this.ignoreNewLine();
+		const title = this.parseContentNode();
+
+		this.ignoreNewLine();
+		const block = this.parseBlockNode();
+		return { kind: NodeKind.Collapsible, title, block };
 	}
 
 	private parseContentNode(): ContentNode {
@@ -218,6 +251,13 @@ export class Parser {
 	private isEof() {
 		return this.tokens[this.cursor]!.kind == TokenKind.EOF ||
 			this.cursor >= this.tokens.length;
+	}
+
+	private ignoreWhitespaces() {
+		const exclude = [TokenKind.Ident, TokenKind.Dedent, TokenKind.NewLine];
+		while (exclude.includes(this.peek().kind)) {
+			this.eat();
+		}
 	}
 
 	private ignoreNewLine() {

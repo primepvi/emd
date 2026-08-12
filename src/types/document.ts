@@ -11,6 +11,9 @@ export enum NodeKind {
 	UnorderedList,
 	Component,
 	EmptyLine,
+	Citation,
+	Block,
+	Collapsible,
 
 	// Content
 	Bold,
@@ -36,7 +39,10 @@ export type LayoutNode =
 	| ParagraphNode
 	| UnorderedListNode
 	| ComponentNode
-	| EmptyLineNode;
+	| EmptyLineNode
+	| CitationNode
+	| BlockNode
+	| CollapsibleNode;
 
 export type ContentNode =
 	| TextNode
@@ -77,6 +83,22 @@ export interface ComponentNode {
 export interface EmptyLineNode {
 	kind: NodeKind.EmptyLine;
 	count: number;
+}
+
+export interface CitationNode {
+	kind: NodeKind.Citation;
+	content: ContentNode;
+}
+
+export interface BlockNode {
+	kind: NodeKind.Block;
+	childrens: LayoutNode[];
+}
+
+export interface CollapsibleNode {
+	kind: NodeKind.Collapsible;
+	title: ContentNode;
+	block: BlockNode;
 }
 
 // content nodes

@@ -7,7 +7,10 @@ import {
 	type ParagraphNode,
 	type ContentNode,
 	type UnorderedListNode,
-	type ComponentNode
+	type ComponentNode,
+	type CitationNode,
+	type CollapsibleNode,
+	type BlockNode
 } from "../types/document.js";
 
 export class Compiler {
@@ -25,7 +28,7 @@ export class Compiler {
 		for (const node of this.document.nodes) {
 			bodyChildren.push(this.compileLayoutNode(node));
 		}
-	  
+
 		this.depth = 1;
 		const head = [
 			this.indent("<head>"),
@@ -51,17 +54,47 @@ export class Compiler {
 
 	private compileLayoutNode(node: LayoutNode): string {
 		switch (node.kind) {
+			case NodeKind.Block: return this.compileBlockNode(node as BlockNode);
 			case NodeKind.Heading: return this.compileHeadingNode(node as HeadingNode);
 			case NodeKind.Paragraph: return this.compileParagraphNode(node as ParagraphNode);
 			case NodeKind.EmptyLine: return this.indent(`<br class="emd-empty-line">`);
 			case NodeKind.UnorderedList: return this.compileUnorderedListNode(node as UnorderedListNode);
 			case NodeKind.Component: return this.compileComponentNode(node as ComponentNode);
+			case NodeKind.Citation: return this.compileCitationNode(node as CitationNode);
+			case NodeKind.Collapsible: return this.compileCollapsibleNode(node as CollapsibleNode);
+
 		}
+	}
+
+	private compileBlockNode(node: BlockNode): string {
+		const bodyChildren: string[] = [];
+
+		const parentDepth = this.depth++;
+		for (const child of node.childrens) {
+			bodyChildren.push(this.compileLayoutNode(child));
+		}
+
+		this.depth = parentDepth;
+		const code = [
+			this.indent(`<div class="emd-block">`),
+			bodyChildren.join("\n"),
+			this.indent(`</div>`)
+		];
+
+		return code.join("\n");
+	}
+
+	private compileCitationNode(node: CitationNode): string {
+		return `TODO: implement this.`;
+	}
+
+	private compileCollapsibleNode(node: CollapsibleNode): string {
+		return `TODO: implement this.`;
 	}
 
 	private compileHeadingNode(node: HeadingNode): string {
 		const bodyCode = this.compileContentNode(node.content).trim();
-	  return this.indent(`<h${node.level} class="emd-heading emd-heading--${node.level}">${bodyCode}</h${node.level}>`);
+		return this.indent(`<h${node.level} class="emd-heading emd-heading--${node.level}">${bodyCode}</h${node.level}>`);
 	}
 
 	private compileParagraphNode(node: ParagraphNode): string {
@@ -86,14 +119,13 @@ export class Compiler {
 		}
 
 		this.depth = parentDepth;
-
 		const code = [
 			this.indent(`<ul class="emd-list emd-list--unordered">`),
 			bodyChildren.join("\n"),
 			this.indent("</ul>")
-		].join("\n");
+		];
 
-		return code;
+		return code.join("\n");
 	}
 
 	private compileComponentNode(node: ComponentNode): string {
