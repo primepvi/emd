@@ -1,6 +1,6 @@
 export enum TokenKind {
 	EOF = -1,
-	Ident = 0,
+	Indent = 0,
 	Dedent,
 
 	// Punctuators
@@ -13,6 +13,7 @@ export enum TokenKind {
 	Minus,              // -
 	Major,              // >
 	Pipe,               // |
+	Dot,                // .
 
 	// Essentials
 	Atom,

@@ -1,0 +1,21 @@
+:root {
+    --emd-color-background: var(--emd-gray-50);
+    --emd-color-text: var(--emd-gray-900);
+
+    --emd-color-quote-text: var(--emd-gray-600);
+    --emd-color-quote-line: var(--emd-gray-300);
+
+    --emd-color-heading: var(--emd-gray-900);
+    --emd-color-heading-line: var(--emd-gray-300);
+}
+
+[data-theme="dark"] {
+    --emd-color-background: var(--emd-gray-800);
+    --emd-color-text: var(--emd-white);
+    
+    --emd-color-quote-text: var(--emd-gray-400);
+    --emd-color-quote-line: var(--emd-gray-600);
+
+    --emd-color-heading: var(--emd-white);
+    --emd-color-heading-line: var(--emd-gray-600);
+}

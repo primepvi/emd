@@ -5,10 +5,12 @@
 
     /* Text */
     --emd-color-text: var(--emd-gray-900);
-    --emd-color-text-muted: var(--emd-gray-600);
+    --emd-color-quote-text: var(--emd-gray-500);
+    --emd-color-quote-line: var(--emd-gray-200);
 
     /* Heading */
     --emd-color-heading: var(--emd-gray-900);
+    --emd-color-heading-line: var(--emd-gray-300);
 
     /* Layout */
     --emd-document-width: var(--emd-content-width);

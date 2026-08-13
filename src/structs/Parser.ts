@@ -18,6 +18,8 @@ import {
 	type CitationNode,
 	type BlockNode,
 	type CollapsibleNode,
+	type OrderedListNode,
+	type OrderedListItemNode,
 } from "../types/document.js";
 
 export class Parser {
@@ -40,11 +42,12 @@ export class Parser {
 	private parseLayoutNode(): LayoutNode {
 		const token = this.peek();
 		switch (token.kind) {
-			case TokenKind.Ident: return this.parseBlockNode();
+			case TokenKind.Indent: return this.parseBlockNode();
 			case TokenKind.HashTag: return this.parseHeadingNode();
 			case TokenKind.Star:
 			case TokenKind.Text: return this.parseParagraphNode();
 			case TokenKind.Minus: return this.parseUnorderedListNode();
+			case TokenKind.Number: return this.parseOrderedListNode();
 			case TokenKind.Identifier: return this.parseComponentNode();
 			case TokenKind.NewLine: return this.parseEmptyLineNode();
 			case TokenKind.Pipe: return this.parseCitationNode();
@@ -54,7 +57,7 @@ export class Parser {
 	}
 
 	private parseBlockNode(): BlockNode {
-		this.expect(TokenKind.Ident);
+		this.expect(TokenKind.Indent);
 
 		const childrens: LayoutNode[] = [];
 		while (!this.isEof() && this.peek().kind != TokenKind.Dedent) {
@@ -111,15 +114,34 @@ export class Parser {
 		return { kind: NodeKind.UnorderedList, items };
 	}
 
+	private parseOrderedListNode(): OrderedListNode {
+		const items: OrderedListItemNode[] = [];
+
+		while (this.peek().kind == TokenKind.Number) {
+			const index = this.expect(TokenKind.Number);
+			this.expect(TokenKind.Dot);
+
+			items.push({
+				kind: NodeKind.OrderedListItem,
+				index: parseInt(index.lexeme),
+				item: this.parseContentNode()
+			});
+
+			this.ignoreNewLine();
+		}
+
+		return { kind: NodeKind.OrderedList, items };
+	}
+
 	private parseComponentNode(): ComponentNode {
 		const token = this.expect(TokenKind.Identifier);
 		const name = token.lexeme.slice(1);
 		const attributes: ComponentAttributeNode[] = [];
 
+		this.ignoreWhitespaces();
 		this.expect(TokenKind.OpenBrace);
 		while (!this.isEof() && this.peek().kind != TokenKind.CloseBrace) {
 			this.ignoreWhitespaces();
-
 			let attributeName: string | null = null;
 			if (this.peek(1).kind != TokenKind.Comma && this.peek(1).kind != TokenKind.CloseBrace) {
 				const atom = this.expect(TokenKind.Atom);
@@ -254,7 +276,7 @@ export class Parser {
 	}
 
 	private ignoreWhitespaces() {
-		const exclude = [TokenKind.Ident, TokenKind.Dedent, TokenKind.NewLine];
+		const exclude = [TokenKind.Indent, TokenKind.Dedent, TokenKind.NewLine];
 		while (exclude.includes(this.peek().kind)) {
 			this.eat();
 		}

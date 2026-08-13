@@ -10,7 +10,8 @@ import {
 	type ComponentNode,
 	type CitationNode,
 	type CollapsibleNode,
-	type BlockNode
+	type BlockNode,
+	type OrderedListNode
 } from "../types/document.js";
 
 export class Compiler {
@@ -21,7 +22,7 @@ export class Compiler {
 		private processors: ComponentProcessorRegistry
 	) { }
 
-	public compile(): string {
+	public compile(themePath: string): string {
 		const bodyChildren: string[] = [];
 
 		this.depth = 2;
@@ -30,17 +31,50 @@ export class Compiler {
 		}
 
 		this.depth = 1;
+
 		const head = [
 			this.indent("<head>"),
 			this.indent('\t<meta charset="UTF-8">'),
 			this.indent('\t<link rel="stylesheet" href="emd.css">'),
+			this.indent(`\t<link rel="stylesheet" href="${themePath}">`),
+			this.indent('\t<script src="https://unpkg.com/lucide@latest"></script>'),
 			this.indent("</head>")
 		].join("\n");
 
+		const controls = [
+			this.indent('<div class="emd-controls">'),
+			this.indent('\t<button class="emd-back-button" onclick="history.back()" aria-label="Go back">'),
+			this.indent('\t\t<i data-lucide="arrow-left"></i>'),
+			this.indent('\t</button>'),
+			this.indent('\t<button class="emd-theme-button" aria-label="Toggle theme">'),
+			this.indent('\t\t<i data-lucide="sun"></i>'),
+			this.indent('\t</button>'),
+			this.indent("</div>")
+		].join("\n");
+
 		const body = [
-			this.indent(`<body class="emd-document">`),
+			this.indent('<body class="emd-document" data-theme="light">'),
+			controls,
 			bodyChildren.join("\n"),
 			this.indent("</body>")
+		].join("\n");
+
+		const script = [
+			"<script>",
+			"\tlucide.createIcons();",
+			"",
+			"\tconst themeButton = document.querySelector('.emd-theme-button');",
+			"",
+			"\tthemeButton.addEventListener('click', () => {",
+			"\t\tconst body = document.body;",
+			"\t\tconst dark = body.dataset.theme === 'dark';",
+			"",
+			"\t\tbody.dataset.theme = dark ? 'light' : 'dark';",
+			"",
+			"\t\tthemeButton.innerHTML = `<i data-lucide=\"${dark ? 'sun' : 'moon'}\"></i>`;",
+			"\t\tlucide.createIcons();",
+			"\t});",
+			"</script>"
 		].join("\n");
 
 		return [
@@ -48,6 +82,7 @@ export class Compiler {
 			"<html>",
 			head,
 			body,
+			script,
 			"</html>"
 		].join("\n");
 	}
@@ -59,6 +94,7 @@ export class Compiler {
 			case NodeKind.Paragraph: return this.compileParagraphNode(node as ParagraphNode);
 			case NodeKind.EmptyLine: return this.indent(`<br class="emd-empty-line">`);
 			case NodeKind.UnorderedList: return this.compileUnorderedListNode(node as UnorderedListNode);
+			case NodeKind.OrderedList: return this.compileOrderedListNode(node as OrderedListNode);
 			case NodeKind.Component: return this.compileComponentNode(node as ComponentNode);
 			case NodeKind.Citation: return this.compileCitationNode(node as CitationNode);
 			case NodeKind.Collapsible: return this.compileCollapsibleNode(node as CollapsibleNode);
@@ -92,7 +128,7 @@ export class Compiler {
 	private compileCollapsibleNode(node: CollapsibleNode): string {
 		const parentDepth = this.depth++;
 
-		const summary = this.indent(`<summary>${this.compileContentNode(node.title)}</summary>`);
+		const summary = this.indent(`<summary>${this.compileContentNode(node.title).trim()}</summary>`);
 		const block = this.compileBlockNode(node.block);
 
 		this.depth = parentDepth;
@@ -141,6 +177,28 @@ export class Compiler {
 
 		return code.join("\n");
 	}
+
+	private compileOrderedListNode(
+		node: OrderedListNode
+	): string {
+		const parentDepth = this.depth++;
+		const bodyChildren: string[] = [];
+
+		for (const child of node.items) {
+			const content = this.compileContentNode(child.item).trim();
+			bodyChildren.push(this.indent(`<li class="emd-list-item">${content}</li>`));
+		}
+
+		this.depth = parentDepth;
+		const code = [
+			this.indent(`<ol class="emd-list emd-list--ordered">`),
+			bodyChildren.join("\n"),
+			this.indent("</ol>")
+		];
+
+		return code.join("\n");
+	}
+
 
 	private compileComponentNode(node: ComponentNode): string {
 		if (!this.processors.has(node.name)) {

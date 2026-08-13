@@ -9,6 +9,7 @@ export enum NodeKind {
 	Heading,
 	Paragraph,
 	UnorderedList,
+	OrderedList,
 	Component,
 	EmptyLine,
 	Citation,
@@ -20,6 +21,7 @@ export enum NodeKind {
 	Italic,
 	Text,
 	UnorderedListItem,
+	OrderedListItem,
 	ComponentAttribute,
 
 	// Literals
@@ -38,6 +40,7 @@ export type LayoutNode =
 	| HeadingNode
 	| ParagraphNode
 	| UnorderedListNode
+	| OrderedListNode
 	| ComponentNode
 	| EmptyLineNode
 	| CitationNode
@@ -49,6 +52,7 @@ export type ContentNode =
 	| BoldNode
 	| ItalicNode
 	| UnorderedListItemNode
+	| OrderedListItemNode
 	| ComponentAttributeNode;
 
 export type LiteralNode =
@@ -72,6 +76,11 @@ export interface ParagraphNode {
 export interface UnorderedListNode {
 	kind: NodeKind.UnorderedList;
 	items: UnorderedListItemNode[];
+}
+
+export interface OrderedListNode {
+	kind: NodeKind.OrderedList;
+	items: OrderedListItemNode[];
 }
 
 export interface ComponentNode {
@@ -120,6 +129,12 @@ export interface TextNode {
 
 export interface UnorderedListItemNode {
 	kind: NodeKind.UnorderedListItem;
+	item: ContentNode;
+}
+
+export interface OrderedListItemNode {
+	kind: NodeKind.OrderedListItem;
+	index: number;
 	item: ContentNode;
 }
 

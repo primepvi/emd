@@ -10,6 +10,7 @@ const LEXER_REGEXES: [TokenKind, RegExp][] = [
 	[TokenKind.Minus, /^-/],
 	[TokenKind.Major, /^>/],
 	[TokenKind.Pipe, /^\|/],
+	[TokenKind.Dot, /^\./],
 	[TokenKind.Boolean, /^(true|false)/],
 	[TokenKind.Atom, /^:[a-zA-Z_][a-zA-Z0-9_-]*/],
 	[TokenKind.Identifier, /^@[a-zA-Z_][a-zA-Z0-9_-]*/],
@@ -61,17 +62,17 @@ export class Lexer {
 					this.identations.pop();
 				}
 			} else if (identation < whitespaces) {
-				this.tokens.push({ kind: TokenKind.Ident, lexeme: "" });
+				this.tokens.push({ kind: TokenKind.Indent, lexeme: "" });
 				this.identations.push(whitespaces);
 			}
 		}
 
 		for (const [kind, regex] of LEXER_REGEXES) {
-			const match = currentText.trim().match(regex);
+			const match = currentText.trimStart().match(regex);
 			if (!match) continue;
 
 			const lexeme = match[0];
-			const whitespaces = currentText.length - currentText.trim().length;
+			const whitespaces = currentText.match(/^ +/)?.[0].length ?? 0;
 			this.cursor += whitespaces + lexeme.length;
 
 			this.tokens.push({

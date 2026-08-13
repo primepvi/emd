@@ -20,7 +20,7 @@ const processors: ComponentProcessorRegistry = new Map();
 processors.set("image", new ImageComponentProcessor());
 
 const compiler = new Compiler(document, processors);
-const code = compiler.compile();
+const code = compiler.compile("../styles/themes/default.css");
 
 writeFileSync("build/hello.html", code, "utf8");
 

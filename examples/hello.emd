@@ -1,19 +1,27 @@
 # Hello World
 
 This is a simple **EMD** document.
+
 Markdown continues to work normally.
 
 @image {
-    :src "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvoX3W9uD-50beXyKy-wEAVcI1JpKbbSdqukgShiliVA&s",
+    :src "../assets/mdlogo.svg"
     :alt "EMD Logo"
 }
 
 ## Features
-| See the features below:
+
 - Markdown
 - Custom components
 - Static HTML generation
-  - With custom css theme
 
-> Click here
-  That's it.
+> Simple documents, extensible components.
+  Hello Collapsible
+
+### Steps
+
+1. Write your document.
+2. Compile it.
+3. Open the HTML.
+
+| That's it.
