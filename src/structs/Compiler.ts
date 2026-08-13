@@ -14,6 +14,11 @@ import {
 	type OrderedListNode
 } from "../types/document.js";
 
+export interface CompilerOutput {
+	links: string[];
+	document: string[];
+}
+
 export class Compiler {
 	private depth = 0;
 
@@ -22,7 +27,7 @@ export class Compiler {
 		private processors: ComponentProcessorRegistry
 	) { }
 
-	public compile(themePath: string): string {
+	public compile(themePath: string): CompilerOutput {
 		const bodyChildren: string[] = [];
 
 		this.depth = 2;
@@ -30,61 +35,18 @@ export class Compiler {
 			bodyChildren.push(this.compileLayoutNode(node));
 		}
 
-		this.depth = 1;
+		const links = [
+			'\t<link rel="stylesheet" href="emd.css">',
+			`\t<link rel="stylesheet" href="${themePath}">`,
+		];
 
-		const head = [
-			this.indent("<head>"),
-			this.indent('\t<meta charset="UTF-8">'),
-			this.indent('\t<link rel="stylesheet" href="emd.css">'),
-			this.indent(`\t<link rel="stylesheet" href="${themePath}">`),
-			this.indent('\t<script src="https://unpkg.com/lucide@latest"></script>'),
-			this.indent("</head>")
-		].join("\n");
-
-		const controls = [
-			this.indent('<div class="emd-controls">'),
-			this.indent('\t<button class="emd-back-button" onclick="history.back()" aria-label="Go back">'),
-			this.indent('\t\t<i data-lucide="arrow-left"></i>'),
-			this.indent('\t</button>'),
-			this.indent('\t<button class="emd-theme-button" aria-label="Toggle theme">'),
-			this.indent('\t\t<i data-lucide="sun"></i>'),
-			this.indent('\t</button>'),
-			this.indent("</div>")
-		].join("\n");
-
-		const body = [
-			this.indent('<body class="emd-document" data-theme="light">'),
-			controls,
+		const document = [
+			'<div class="emd-document">',
 			bodyChildren.join("\n"),
-			this.indent("</body>")
-		].join("\n");
+			"</div>"
+		];
 
-		const script = [
-			"<script>",
-			"\tlucide.createIcons();",
-			"",
-			"\tconst themeButton = document.querySelector('.emd-theme-button');",
-			"",
-			"\tthemeButton.addEventListener('click', () => {",
-			"\t\tconst body = document.body;",
-			"\t\tconst dark = body.dataset.theme === 'dark';",
-			"",
-			"\t\tbody.dataset.theme = dark ? 'light' : 'dark';",
-			"",
-			"\t\tthemeButton.innerHTML = `<i data-lucide=\"${dark ? 'sun' : 'moon'}\"></i>`;",
-			"\t\tlucide.createIcons();",
-			"\t});",
-			"</script>"
-		].join("\n");
-
-		return [
-			"<!DOCTYPE html>",
-			"<html>",
-			head,
-			body,
-			script,
-			"</html>"
-		].join("\n");
+		return { links, document };
 	}
 
 	private compileLayoutNode(node: LayoutNode): string {

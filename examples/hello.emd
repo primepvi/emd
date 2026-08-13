@@ -5,7 +5,7 @@ This is a simple **EMD** document.
 Markdown continues to work normally.
 
 @image {
-    :src "../assets/mdlogo.svg"
+    :src "assets/mdlogo.svg"
     :alt "EMD Logo"
 }
 
