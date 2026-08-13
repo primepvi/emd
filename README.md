@@ -29,7 +29,7 @@ const processors: ComponentProcessorRegistry = new Map();
 processors.set("image", new ImageComponentProcessor());
 
 const compiler = new Compiler(ast, processors);
-const { links, document } = compiler.compile();
+const { links, document } = compiler.compile("theme.css");
 console.log(links, document);
 ```
 
