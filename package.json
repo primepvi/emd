@@ -1,5 +1,5 @@
 {
-  "name": "emd",
+  "name": "@primepvi/emd",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -16,16 +16,9 @@
       }
   },
   "files": ["dist"],
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "^11.3.0",
-      "onFail": "download"
-    }
-  },
+  "keywords": ["md", "markdown"],
+  "author": "primepvi",
+  "license": "MIT",
   "type": "module",
   "devDependencies": {
     "@types/node": "^26.2.0",
