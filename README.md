@@ -5,32 +5,19 @@ A Markdown extension language for writing documents with custom components and g
 ## Installation
 ```console
 $ npm i @primepvi/emd
-$ pnpm add @primepvi/emd
 ```
 
 ## Usage
 ```ts
-import {
-   Lexer,
-   Parser,
-   Compiler,
-   ImageComponentProcessor,
-   type ComponentProcessorRegistry
-} from "@primepvi/emd";
+import { Compiler, DefaultProcessorRegistry, generateStyles } from "@primepvi/emd";
 
 const source = "# Hello EMD";
-const lexer = new Lexer(source);
-const tokens = lexer.lex();
+const compiler = new Compiler(source, DefaultProcessorRegistry);
+const { document } = compiler.compile();
+console.log(document); // html code
 
-const parser = new Parser(tokens);
-const ast = parser.parse();
-
-const processors: ComponentProcessorRegistry = new Map();
-processors.set("image", new ImageComponentProcessor());
-
-const compiler = new Compiler(ast, processors);
-const { links, document } = compiler.compile("theme.css");
-console.log(links, document);
+const styles = generateStyles();
+console.log(styles); // css code
 ```
 
 The .emd source code are converted into HTML code.

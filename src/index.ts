@@ -1,4 +1,5 @@
 // components
+export { DefaultProcessorRegistry } from "./components/index.js";
 export * from "./components/image.js";
 
 // structs
@@ -10,3 +11,6 @@ export * from "./structs/Compiler.js";
 export * from "./types/component.js";
 export * from "./types/document.js";
 export * from "./types/token.js";
+
+// utils
+export { generateStyles } from "./utils/generate-styles.js";

@@ -1,22 +1,28 @@
 {
   "name": "@primepvi/emd",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-      "build": "tsc",
-      "dev": "tsx src/index.ts",
-      "dev:w": "tsc --watch src/index.ts"
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "dev:w": "tsc --watch src/index.ts"
   },
   "exports": {
-      ".": {
-	  "types": "./dist/index.d.ts",
-	  "import": "./dist/index.js"
-      }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
-  "files": ["dist"],
-  "keywords": ["md", "markdown"],
+  "files": [
+    "dist",
+    "styles"
+  ],
+  "keywords": [
+    "md",
+    "markdown"
+  ],
   "author": "primepvi",
   "license": "MIT",
   "type": "module",

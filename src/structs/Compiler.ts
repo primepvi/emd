@@ -1,8 +1,8 @@
 import type { ComponentProcessorRegistry } from "../types/component.js";
 import {
+	NodeKind,
 	type Document,
 	type LayoutNode,
-	NodeKind,
 	type HeadingNode,
 	type ParagraphNode,
 	type ContentNode,
@@ -13,21 +13,27 @@ import {
 	type BlockNode,
 	type OrderedListNode
 } from "../types/document.js";
+import { Lexer } from "./Lexer.js";
+import { Parser } from "./Parser.js";
 
 export interface CompilerOutput {
-	links: string[];
 	document: string[];
 }
 
 export class Compiler {
 	private depth = 0;
+	private document: Document;
 
 	public constructor(
-		private document: Document,
+		source: string,
 		private processors: ComponentProcessorRegistry
-	) { }
+	) {
+		const lexer = new Lexer(source);
+		const parser = new Parser(lexer.lex());
+		this.document = parser.parse();
+	}
 
-	public compile(themePath: string): CompilerOutput {
+	public compile(): CompilerOutput {
 		const bodyChildren: string[] = [];
 
 		this.depth = 2;
@@ -35,18 +41,13 @@ export class Compiler {
 			bodyChildren.push(this.compileLayoutNode(node));
 		}
 
-		const links = [
-			'\t<link rel="stylesheet" href="emd.css">',
-			`\t<link rel="stylesheet" href="${themePath}">`,
-		];
-
 		const document = [
 			'<div class="emd-document">',
 			bodyChildren.join("\n"),
 			"</div>"
 		];
 
-		return { links, document };
+		return { document };
 	}
 
 	private compileLayoutNode(node: LayoutNode): string {
