@@ -8,9 +8,9 @@ export function generateStyles() {
 	const baseCSS = readFileSync(`${basePath}/styles/base.css`, "utf8");
 
 	const tokensCSS = readdirSync(`${basePath}/styles/tokens`)
-		.map(p => readFileSync(p, "utf8"));
+		.map(p => readFileSync(`${basePath}/styles/tokens/${p}`, "utf8"));
 	const componentsCSS = readdirSync(`${basePath}/styles/components`)
-		.map(p => readFileSync(p, "utf8"));
+		.map(p => readFileSync(`${basePath}/styles/components/${p}`, "utf8"));
 
 	const themeCSS = readFileSync(`${basePath}/styles/themes/default.css`, "utf8");
 
