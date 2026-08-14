@@ -1,15 +1,18 @@
 import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
 
-export function generateStyles(themePath: string = "styles/themes/default.css") {
-	const resetCSS = readFileSync("styles/reset.css", "utf8");
-	const baseCSS = readFileSync("styles/base.css", "utf8");
+export function generateStyles() {
+	const basePath = path.resolve(import.meta.dirname, "../..");
 
-	const tokensCSS = readdirSync("styles/tokens")
+	const resetCSS = readFileSync(`${basePath}/styles/reset.css`, "utf8");
+	const baseCSS = readFileSync(`${basePath}/styles/base.css`, "utf8");
+
+	const tokensCSS = readdirSync(`${basePath}/styles/tokens`)
 		.map(p => readFileSync(p, "utf8"));
-	const componentsCSS = readdirSync("styles/components")
+	const componentsCSS = readdirSync(`${basePath}/styles/components`)
 		.map(p => readFileSync(p, "utf8"));
 
-	const themeCSS = readFileSync(themePath, "utf8");
+	const themeCSS = readFileSync(`${basePath}/styles/themes/default.css`, "utf8");
 
 	const styles = [
 		resetCSS,
